@@ -13,7 +13,7 @@ def read():
     count = 1
 
     driver.get('https://www.windows10productkeys.info/key-finder')
-    for name in range(1, 1000):
+    for name in range(1, 100):
         driver.find_element_by_xpath('/html/body/section[3]/div/div/div/form/button').click()
         extract_data = driver.find_element_by_xpath('/html/body/section[3]/div/div/div/b')
         check=1

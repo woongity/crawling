@@ -3,7 +3,13 @@ from openpyxl import Workbook
 from bs4 import BeautifulSoup
 from selenium import webdriver
 
-driver = webdriver.Chrome('C:\python/chromedriver')
+
+options = webdriver.ChromeOptions()
+options.add_argument('headless')
+options.add_argument('window-size=1920x1080')
+options.add_argument("disable-gpu")
+driver = webdriver.Chrome('C:\python/chromedriver',options=options)
+driver=webdriver.Chrome('C:\python/chromedriver')
 
 def wait():
     driver.implicitly_wait(3)
