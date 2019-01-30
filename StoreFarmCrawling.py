@@ -35,15 +35,22 @@ class Customer:
     #     self.index=self.index-1
     #     return self.data[self.index]
 
+    # options = webdriver.ChromeOptions()
+    # options.add_argument('headless')
+    # options.add_argument('window-size=1920x1080')
+    # options.add_argument("disable-gpu")
+    # driver = webdriver.Chrome('C:\python/chromedriver', options=options)
+# 헤드리스 모드 진행시 블록아웃을 삭제
+
 #TODO : num = 주문이 몇개나 들어왔는지 확인
-def make_excel(url, num):
+def make_excel(url, customer_count):
     wb = Workbook()
     ws1 = wb.active
     # ws2= wb.create_sheet(title="second_sheet")  새로운 시트 파일 하나 더 추가하기
     for col in range(1,5):
         ws1.cell(row=1,column=col,value=checkList_info[col-1])
     # 이름, 전번, 집주소, 통관번호 입력을 넣어준다
-    for row in range(2, num+2):
+    for row in range(2, customer_count + 2):
         customer_info=customer_info_arr[row - 2].get_customer_info()
         for col in range(1, 5):
             ws1.cell(row=row, column=col).value=customer_info[col]  # TODO : value값에 그냥 숫자들이 아니라 개인 신상들어가야함
@@ -51,12 +58,6 @@ def make_excel(url, num):
     wb.close()
 
 # 엑셀파일
-    # options = webdriver.ChromeOptions()
-    # options.add_argument('headless')
-    # options.add_argument('window-size=1920x1080')
-    # options.add_argument("disable-gpu")
-    # driver = webdriver.Chrome('C:\python/chromedriver', options=options)
-# 헤드리스 모드 진행시 블록아웃을 삭제
 
 def get_html(url):
     _html = ""
@@ -69,6 +70,12 @@ def add_customer(name,address,phone_num,custom_num):
     customer=Customer(name,address,phone_num,custom_num)
     customer_info_arr.append(customer)
 
+def open_info_pages():
+    driver.implicitly_wait(3)
+
+    read_order()
+#     TODO 여기 부분 수정해야한다. 링크를 클릭하면 창들이 탭으로 뜨면서 정보들을 크롤링해오는 방향으로 간다
+
 def read_order():
     customer_count=0
     html = driver.page_source
@@ -79,6 +86,8 @@ def read_order():
     phone_num="01057543876"
     custom_num="148342342342"
     add_customer(name,address,phone_num,custom_num)
+
+
     customer_count+=1
     # for i in customer_count:
 
@@ -91,6 +100,7 @@ def log_in():
         driver.find_element_by_id('loginId').send_keys('ytw1122@gmail.com')
         driver.find_element_by_id('loginPassword').send_keys('andrew3876')
         driver.find_element_by_xpath('//*[@id="loginButton"]').click()
+        driver.find_element_by_xpath('/html/body/div[1]/div[2]/div[2]/div[2]/div[1]/div[2]/div[2]/div[2]/table/tbody/tr[1]/td[2]/a')
     except Exception as inst:
         print("fuck, its not working")
         print(inst.args)
@@ -102,16 +112,9 @@ def go_to_order_page():
     driver.implicitly_wait(3)
     driver.find_element_by_css_selector('#seller-lnb > div > div:nth-child(1) > ul > li.active > ul > li:nth-child(1) > a').click()
 
-def open_info_pages():
-    driver.implicitly_wait(3)
-
-#     TODO 여기 부분 수정해야한다. 링크를 클릭하면 창들이 탭으로 뜨면서 정보들을 크롤링해오는 방향으로 간다
-
-
 log_in()
 driver.implicitly_wait(3)
 go_to_order_page()
-open_info_pages()
 customer_count=read_order()
 make_excel("C:\study/test.xlsx",customer_count)
 # 3의 의미 : 데이터의 갯수가 3개다
