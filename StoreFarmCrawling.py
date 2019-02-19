@@ -2,7 +2,8 @@ from openpyxl import Workbook
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from datetime import date
-
+import os
+import sys
 
 options = webdriver.ChromeOptions()
 options.add_argument('headless')
@@ -81,14 +82,24 @@ def read_spec_order():
     add_customer(id,name, address, phone_num, custom_num)
 
 def read_order_and_return_customer_count():
-    customer_count = 0
-    # url=driver.current_url  #이부분에서 현재 url을 긁어온다
+    customers_count = 0
+    # TODO : url=driver.current_url  #이부분에서 현재 url을 긁어온다
+
     # TODO: 여기서 리스트를 넣어주지 말고 읽어와서 처리하도록
-    url= 'https://sell.smartstore.naver.com/o/orderDetail/productOrder/' + '2019011916399251' + '/popup' #상세페이지 url
-    open_info_pages(url)
-    customer_count+=1
+    html = driver.page_source
+    soup = BeautifulSoup(html, 'html.parser')
+
+    soup.findAll()
+
+
+    # list=customers.find_elements_by_tag_name('a')
+    # print(list)
+    # for page in list:
+    #     url= 'https://sell.smartstore.naver.com/o/orderDetail/productOrder/' + list[page].text + '/popup' #상세페이지 url
+    #     open_info_pages(url)
+
     # for i in customer_count:
-    return customer_count
+    return customers_count
 
 def log_in():
     try:
@@ -97,6 +108,7 @@ def log_in():
         driver.find_element_by_id('loginId').send_keys('ytw1122@gmail.com')
         driver.find_element_by_id('loginPassword').send_keys('andrew3876')
         driver.find_element_by_xpath('//*[@id="loginButton"]').click()
+    #     TODO: 여기에 사용자의 이메일과 아이디를 넣어줘야 작동하도록 구현
     except Exception as inst:
         print("fuck, its not working")
         print(inst.args)
@@ -112,6 +124,6 @@ log_in()
 driver.implicitly_wait(3)
 go_to_order_page()
 customer_count=read_order_and_return_customer_count()
-file_name="C:\study/"+get_excel_file_name()
+file_name=os.path.dirname(os.path.realpath(__file__))+get_excel_file_name()
 make_excel(file_name,customer_count)
 # 3의 의미 : 데이터의 갯수가 3개다
