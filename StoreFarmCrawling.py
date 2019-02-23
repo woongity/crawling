@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from datetime import date
 import os
-import sys
 
 options = webdriver.ChromeOptions()
 options.add_argument('window-size=1920x1080')
@@ -77,28 +76,28 @@ def read_spec_order():
     print(id, name, address, phone_num, custom_num)
     add_customer(id, name, address, phone_num, custom_num)
 
-
 def read_order_and_return_customer_count():
-    customers_count = 0
     driver.implicitly_wait(3)
     driver.switch_to.frame(driver.find_element_by_id("__naverpay")) #새로운 프레임으로 이동한다
 
     html = driver.page_source
     soup = BeautifulSoup(html, 'lxml')  #lxml 이 빠르므로 이걸로 쓰자
-
+    content=[]
     list=soup.find_all(class_= "ellipsis",columnname="PRODUCT_ORDER_ID",title=True)
-    customers_count=len(list)/2
+    for item in list:
+        content.append(item.text)
+    print(content)
+    customers_count=int(len(list))
 
     #TODO : list 배열에서 title 값을 읽어오는 역할을 수행한다.
-
-
-    print(list)
+    for customer_num in range(0,customers_count):
+        url = 'https://sell.smartstore.naver.com/o/orderDetail/productOrder/' + content[customer_num] + '/popup'  # 상세페이지 url
+        open_info_pages(url)
     # for page in list:
-    #     url= 'https://sell.smartstore.naver.com/o/orderDetail/productOrder/' + list[page].text + '/popup' #상세페이지 url
+    #
     #     open_info_pages(url)
     # for i in customer_count:
     return customers_count
-
 
 def log_in():
     try:
@@ -111,7 +110,6 @@ def log_in():
     except Exception as inst:
         print("fuck, its not working")
         print(inst.args)
-
 
 #     in case when login doesnt work properly
 
