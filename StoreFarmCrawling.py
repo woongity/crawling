@@ -1,7 +1,6 @@
 from openpyxl import Workbook
 from bs4 import BeautifulSoup
 import gui
-import Customer_class
 from selenium import webdriver
 from datetime import date
 import os
@@ -14,6 +13,25 @@ driver = None
 checkList_info = ("아이디", "이름", "집주소", "전화번호", "통관번호")
 customer_info_arr = []  # Customer 클래스의 배열
 
+class Customer:
+
+    def __init__(self, id, name, address, phone, custom_num):
+        self.id = id
+        self.name = name
+        self.address = address
+        self.phone = phone
+        self.custom_num = custom_num
+
+    def get_customer_info(self):
+        info = [0, self.id, self.name, self.address, self.phone, self.custom_num]
+        return info
+
+    def set_cutomer_info(self, id, name, address, phone, custom_num):
+        self.id = id
+        self.name = name
+        self.address = address
+        self.phone = phone
+        self.custom_num = custom_num
 
 def make_excel(url, customer_count):
     wb = Workbook()
