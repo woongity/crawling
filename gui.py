@@ -16,9 +16,3 @@ class MyApp(QWidget):
         self.resize(400, 200)
         self.show()
 
-
-if __name__ == '__main__':
-
-    app = QApplication(sys.argv)
-    ex = MyApp()
-    sys.exit(app.exec_())
