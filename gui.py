@@ -1,4 +1,5 @@
 import sys
+import StoreFarmCrawling
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLineEdit, QInputDialog
 
 
@@ -10,25 +11,21 @@ class MyApp(QWidget):
         self.initUI()
 
     def initUI(self):
+        email = QLineEdit(self)
+        email.move(20, 50)
 
-        self.id=QLineEdit(self)
-        self.id.move(30, 35)
-        self.pass_word = QLineEdit(self)
-        self.pass_word.move(30, 70)
+        password = QLineEdit(self)
+        password.move(20, 100)
 
-        self.log_in_btn=QPushButton('로그인',self)
+        log_in_btn=QPushButton('로그인',self)
+        try:
+            log_in_btn.clicked.connect(self.log_in)
+        except:
+            print("로그인에 실패하였습니다")
 
-        self.log_in_btn.clicked.connect(self.showDialog)
-        self.log_in_btn.move(200,35)
-        self.log_in_btn.frameSize()
-        self.setWindowTitle('Input dialog')
+        self.setWindowTitle('QLineEdit')
         self.setGeometry(300, 300, 300, 200)
         self.show()
 
+    def log_in(self,email,password):
 
-    def showDialog(self):
-
-        text, ok = QInputDialog.getText(self, 'Input Dialog', 'Enter your name:')
-
-        if ok:
-            self.le.setText(str(text))

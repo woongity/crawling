@@ -100,17 +100,19 @@ def read_order_and_return_customer_count():
     # for i in customer_count:
     return customers_count
 
-def log_in():
+def log_in(email,password):
     try:
         driver.implicitly_wait(3)
         driver.get('https://sell.smartstore.naver.com/#/login')
-        driver.find_element_by_id('loginId').send_keys('ytw1122@gmail.com')
-        driver.find_element_by_id('loginPassword').send_keys('andrew3876')
+        driver.find_element_by_id('loginId').send_keys(email)
+        driver.find_element_by_id('loginPassword').send_keys(password)
         driver.find_element_by_xpath('//*[@id="loginButton"]').click()
     #     TODO: 여기에 사용자의 이메일과 아이디를 넣어줘야 작동하도록 구현
+        return True
     except Exception as inst:
+
         print("fuck, its not working")
-        print(inst.args)
+        return False
 
 #     in case when login doesnt work properly
 
@@ -125,16 +127,20 @@ def go_to_order_page():
 # options.add_argument('window-size=1920x1080')
 # options.add_argument("disable-gpu")
 # driver=webdriver.Chrome('C:\python/chromedriver',options=options)
+def start_core_service(email,password):
+
+    start_time = time.time()
+    log_in(email,password)
+    driver.implicitly_wait(3)
+    go_to_order_page()
+    customer_count = read_order_and_return_customer_count()
+    file_name = os.path.dirname(os.path.realpath(__file__)) + get_excel_file_name()
+    make_excel(file_name, customer_count)
+    print("--- %s seconds ---" % (time.time() - start_time))
+
 if __name__=='__main__':
-    # start_time = time.time()
-    # log_in()
-    # driver.implicitly_wait(3)
-    # go_to_order_page()
-    # customer_count = read_order_and_return_customer_count()
-    # file_name = os.path.dirname(os.path.realpath(__file__)) + get_excel_file_name()
-    # make_excel(file_name, customer_count)
-    # print("--- %s seconds ---" % (time.time() - start_time))
     # # TODO : 속도가 너무 느리다. 멀티프로세싱으로 좀 더 빠른 방법이 없을까?
     app = gui.QApplication(gui.sys.argv)
     ex = gui.MyApp()
     gui.sys.exit(app.exec_())
+
