@@ -1,5 +1,6 @@
 import sys
 import StoreFarmCrawling
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLineEdit, QInputDialog
 
 
@@ -33,7 +34,14 @@ class MyApp(QWidget):
         except Exception as ex:
             print("로그인에 실패하였습니다", ex)
             exit()
-    #      TODO: 로그인 실패여부를 확인하는 함수를 만들어야한다
+
+    def keyPressEvent(self, e):
+        if e.key()==Qt.Key_Enter:
+            self.log_in()
+        if e.key()==Qt.Key_Escape:
+            self.close()
+            exit()
+
     def log_in(self):
         email = self.email_input.text()
         password = self.password_input.text()

@@ -115,17 +115,18 @@ def log_in(email,password):
 
 
 #     in case when login doesnt work properly
-def log_in_check():
+def log_in_suc():
     if driver.current_url=='https://sell.smartstore.naver.com/#/login':
-        print("로그인 실패 수고링")
         return False
     return True
+    #      TODO: 로그인 실패여부를 확인하는 함수를 만들어야한다 함수가 안정교함
 
 def go_to_order_page():
-    if log_in_check():
+    driver.implicitly_wait(3)
+    if not log_in_suc():
+        print("로그인 실패 수고링")
         exit()
     try:
-        driver.implicitly_wait(3)
         drop_down_menu = driver.find_element_by_xpath('//*[@id="seller-lnb"]/div/div[1]/ul/li[3]')
         drop_down_menu.click()
         driver.implicitly_wait(3)
